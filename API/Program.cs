@@ -1,18 +1,16 @@
-using Infrastructure.Data;
 using Infrastructure;
 using Core;
-using Microsoft.EntityFrameworkCore;
+using API;
+
 var builder = WebApplication.CreateBuilder(args);
+
 // Add services to the container.
 
-builder.Services.AddControllers();
-builder.Services.AddCore().AddInfrastructure(builder.Configuration);
+builder.Services.AddCore().AddInfrastructure(builder.Configuration).AddPresentation();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var app=builder.Build();
 
-var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -26,5 +24,4 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.Run();
+app.MigrateDatabase().Run();

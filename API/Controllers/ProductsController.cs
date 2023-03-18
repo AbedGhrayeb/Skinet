@@ -1,11 +1,6 @@
-using System.Security.Cryptography.X509Certificates;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Infrastructure.Data;
 using Core.Entities;
+using Core.Interfaces;
 
 namespace API.Controllers
 {
@@ -13,23 +8,33 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly StoreContext _context;
-        public ProductsController(StoreContext context)
+        private readonly IProductRepository _productRepository;
+        public ProductsController(IProductRepository productRepository)
         {
-            _context = context;
+            _productRepository = productRepository;
             
         }
         [HttpGet]
-        public ActionResult<List<Product>> GetProducts()
+        public async Task<ActionResult<List<Product>>>  GetProducts()
         {
-            return _context.Products.ToList();
+                return await _productRepository.GetProductsAsync();
         }
         [HttpGet("{id}")]
-        public ActionResult<Product> GetProduct(int id)
-        {var product= _context.Products.Find(id);
+        public async Task<ActionResult<Product>> GetProduct(int id)
+        {var product= await _productRepository.GetProductByIdAsync(id);
             if(product is null)
                 return NotFound();
             return product;
+        }
+         [HttpGet("brands")]
+        public async Task<ActionResult<List<ProductBrand>>>  GetProductBrands()
+        {
+                return await _productRepository.GetProductBrandsAsync();
+        }
+         [HttpGet("types")]
+        public async Task<ActionResult<List<ProductType>>>  GetProductTypes()
+        {
+                return await _productRepository.GetProductTypesAsync();
         }
     }
 }
