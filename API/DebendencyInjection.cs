@@ -1,6 +1,7 @@
 using API.Errors;
 using API.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -10,10 +11,15 @@ namespace API
         {
             services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwagger();
             services.AddAutoMapper(typeof(MapperProfile));
-            services.Configure<ApiBehaviorOptions>(options=>
+            //configure valdiation error handling
+            services.AddErrorValidationHandling();
+            return services;
+        }
+         private static IServiceCollection AddErrorValidationHandling(this IServiceCollection services)
+        {
+                 services.Configure<ApiBehaviorOptions>(options=>
             {
                 options.InvalidModelStateResponseFactory= actionContext=>
                 {
@@ -28,6 +34,15 @@ namespace API
                     };
                     return new BadRequestObjectResult(errorResponse);
                 };
+            });
+            return services;
+        }
+        private static IServiceCollection AddSwagger(this IServiceCollection services)
+        {
+              services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(x=> 
+            {
+                x.SwaggerDoc("v1",new OpenApiInfo{Title="SkiNet" , Version ="v1"});
             });
             return services;
         }

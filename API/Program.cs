@@ -18,7 +18,10 @@ app.UseMiddleware<ExceptionMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(x=> 
+    {
+        x.SwaggerEndpoint("/swagger/v1/swagger.json","SkiNet API v1");
+    });
 }
 app.UseStatusCodePagesWithReExecute("/errors/{0}");
 app.UseHttpsRedirection();

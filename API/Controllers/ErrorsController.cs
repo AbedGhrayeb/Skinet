@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [Route("errors/{code}")]
-    public class ErrorsController : BaseApiController
+    public class ErrorsController : ControllerBase
     {
-        public IActionResult Error(int code)=> new ObjectResult(new ApiErrorResponse(code));
+        [HttpGet]
+        public ActionResult Error(int code)=> new ObjectResult(new ApiErrorResponse(code));
     }
 }
