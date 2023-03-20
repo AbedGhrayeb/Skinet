@@ -1,4 +1,6 @@
+using API.Errors;
 using API.Helpers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API
 {
@@ -11,6 +13,22 @@ namespace API
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddAutoMapper(typeof(MapperProfile));
+            services.Configure<ApiBehaviorOptions>(options=>
+            {
+                options.InvalidModelStateResponseFactory= actionContext=>
+                {
+                    var errors=actionContext.ModelState
+                    .Where(x=>x.Value.Errors.Any())
+                    .SelectMany(x=>x.Value.Errors)
+                    .Select(x=>x.ErrorMessage).ToArray();
+
+                    var errorResponse=new ApiValidationErrorResponse()
+                    {
+                        Errors=errors
+                    };
+                    return new BadRequestObjectResult(errorResponse);
+                };
+            });
             return services;
         }
     }

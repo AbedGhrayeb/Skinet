@@ -1,6 +1,7 @@
 using Infrastructure;
 using Core;
 using API;
+using API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddCore().AddInfrastructure(builder.Configuration).AddPresentat
 var app=builder.Build();
 
 
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -18,7 +20,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseStatusCodePagesWithReExecute("/errors/{0}");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthorization();
