@@ -1,3 +1,5 @@
+using API.Helpers;
+
 namespace API
 {
     public static class DependencyInjection
@@ -8,6 +10,7 @@ namespace API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+            services.AddAutoMapper(typeof(MapperProfile));
             return services;
         }
     }

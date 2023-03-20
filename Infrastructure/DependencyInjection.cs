@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Core.Interfaces;
+﻿using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +15,7 @@ namespace Infrastructure
                     options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
         });
         services.AddScoped<IProductRepository,ProductRepository>();
+        services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
             return services;
         }
     }
